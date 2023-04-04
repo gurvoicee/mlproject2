@@ -12,7 +12,8 @@ from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
 
-
+from src.components.model_trainer import ModelTrainer
+from src.components.model_trainer import ModelTrainerConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -52,10 +53,13 @@ class DataIngestion:
             raise CustomException(e,sys)
 
 if __name__== "__main__":
-    path = 'notebook/data/movies.csv'
-    target_column = 'runtime' 
-    delimit = ',' # "," or ";"  
-    a = DataIngestion()
-    train_data,test_data = a.initiate_data_ingestion(path,delimit)
+    path = 'notebook/data/housing.csv'
+    target_column = 'MEDV' 
+    delimit = ',' # "," or ";"
+    obj = DataIngestion()
+    train_data,test_data = obj.initiate_data_ingestion(path,delimit)
     data_transformation = DataTransformation()
-    data_transformation.initiate_data_transformation(train_data,test_data,path,target_column,delimit)
+    train_arr,test_arr,x = data_transformation.initiate_data_transformation(train_data,test_data,path,target_column,delimit)
+    model_trainer = ModelTrainer()
+    trained_model = model_trainer.initiate_model_trainer(train_arr,test_arr)
+    print(trained_model)
